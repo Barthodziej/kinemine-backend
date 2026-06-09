@@ -3,12 +3,49 @@
  */
 package org.kinemine;
 
+import org.kinemine.handler.HelloHandler;
+import org.kinemine.handler.MoviesListHandler;
+import org.kinemine.repository.MovieRepository;
+
+import org.kinemine.jsonserializer.SerializerRegistry;
+import org.kinemine.jsonserializer.impl.StringSerializer;
+import org.kinemine.model.Movie;
+import org.kinemine.jsonserializer.impl.BufferedImageSerializer;
+import org.kinemine.jsonserializer.impl.MovieSerializer;
+
+import java.awt.image.BufferedImage;
+import java.net.InetSocketAddress;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.regex.Matcher;
+
+import com.sun.net.httpserver.HttpServer;
+
 public class App {
     public String getGreeting() {
         return "Hello World!";
     }
 
-    public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+    public static void initializeRegistry() {
+        SerializerRegistry.register(new StringSerializer());
+        SerializerRegistry.register(new BufferedImageSerializer());
+        SerializerRegistry.register(new MovieSerializer());
+    }
+
+    public static void main(String[] args) throws Exception {
+        initializeRegistry();
+        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+        String unixPath = "~/Projekty/kinemine-repository/";
+        String expanded = unixPath.replaceFirst("^~", Matcher.quoteReplacement(System.getProperty("user.home")));
+        Path javaPath = Paths.get(expanded);
+        System.out.println(javaPath.toAbsolutePath());
+
+        MovieRepository repo = new MovieRepository(javaPath);
+
+        server.createContext("/movies", new MoviesListHandler(repo));
+        server.createContext("/hello", new HelloHandler());
+        server.setExecutor(null);
+        server.start();
+        System.out.println("Server is listening on port 8080...");
     }
 }
