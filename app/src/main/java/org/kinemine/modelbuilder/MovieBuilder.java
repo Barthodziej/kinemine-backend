@@ -28,5 +28,10 @@ public class MovieBuilder {
         movie.imageUrl = imageUrl;
         return this;
     }
+
+    public MovieBuilder withWatched(boolean watched) {
+        movie.watched = watched;
+        return this;
+    }
  
 }

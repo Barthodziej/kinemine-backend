@@ -11,17 +11,22 @@ public class MovieSerializer implements JsonSerializer<Movie> {
     @Override
     public String serialize(Movie movie) {
         if (movie == null) return "null";
-        JsonSerializer<String> stringSerializer
-            = SerializerRegistry.getSerializer(String.class); 
+        JsonSerializer<String> stringSerializer = SerializerRegistry.getSerializer(String.class); 
+        JsonSerializer<Boolean> booleanSerializer = SerializerRegistry.getSerializer(Boolean.class); 
         return new CompoundJsonBuilder()
             .addKeyValue(
-                "\"title\"",
+                "title",
                 stringSerializer.serialize(movie.title)
             )
             .addKeyValue(
-                "\"imageUrl\"",
+                "imageUrl",
                 stringSerializer.serialize(movie.imageUrl)
+            )
+            .addKeyValue(
+                "watched",
+                booleanSerializer.serialize(movie.watched)
             ).getProduct();
+
     }
 
     public Class<Movie> getSupportedType() {

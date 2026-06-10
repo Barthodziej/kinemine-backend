@@ -4,14 +4,10 @@
 package org.kinemine;
 
 import org.kinemine.handler.HelloHandler;
-import org.kinemine.handler.MoviesListHandler;
+import org.kinemine.handler.UnwatchedMoviesHandler;
+import org.kinemine.handler.WatchedMoviesHandler;
+import org.kinemine.handler.AllMoviesHandler;
 import org.kinemine.repository.MovieRepository;
-
-import org.kinemine.jsonserializer.SerializerRegistry;
-import org.kinemine.jsonserializer.impl.StringSerializer;
-import org.kinemine.jsonserializer.impl.BufferedImageSerializer;
-import org.kinemine.jsonserializer.impl.MovieSerializer;
-import org.kinemine.jsonserializer.impl.ListSerializer;
 
 import java.net.InetSocketAddress;
 import java.nio.file.Path;
@@ -20,29 +16,26 @@ import java.nio.file.Paths;
 import com.sun.net.httpserver.HttpServer;
 
 public class App {
+
     public String getGreeting() {
         return "Hello World!";
     }
 
-    public static void initializeRegistry() {
-        SerializerRegistry.register(new StringSerializer());
-        SerializerRegistry.register(new BufferedImageSerializer());
-        SerializerRegistry.register(new MovieSerializer());
-        SerializerRegistry.register(new ListSerializer());
-    }
-
     public static void main(String[] args) throws Exception {
-        initializeRegistry();
+        AppConfig.initializeRegistry();
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
         Path javaPath = Paths.get(System.getenv("REPOSITORY_LOCATION"));
         System.out.println(javaPath.toAbsolutePath());
 
         MovieRepository repo = new MovieRepository(javaPath);
 
-        server.createContext("/movies", new MoviesListHandler(repo));
+        server.createContext("/movies/all", new AllMoviesHandler(repo));
+        server.createContext("/movies/watched", new WatchedMoviesHandler(repo));
+        server.createContext("/movies/unwatched", new UnwatchedMoviesHandler(repo));
         server.createContext("/hello", new HelloHandler());
         server.setExecutor(null);
         server.start();
         System.out.println("Server is listening on port 8080...");
     }
+
 }

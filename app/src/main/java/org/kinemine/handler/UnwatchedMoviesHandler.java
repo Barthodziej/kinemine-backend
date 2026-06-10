@@ -10,18 +10,18 @@ import java.util.List;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-public class MoviesListHandler implements HttpHandler {
+public class UnwatchedMoviesHandler implements HttpHandler {
 
     MovieRepository repo;
 
-    public MoviesListHandler(MovieRepository repo) {
+    public UnwatchedMoviesHandler(MovieRepository repo) {
         this.repo = repo;
     }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         var listSerializer = SerializerRegistry.getSerializer(List.class);
-        String response = listSerializer.serialize(repo.getMovies());
+        String response = listSerializer.serialize(repo.getUnwatchedMovies());
         byte[] responseBytes = response.getBytes(java.nio.charset.StandardCharsets.UTF_8);
         exchange.getResponseHeaders().set("Content-Type", "application/json");
         exchange.sendResponseHeaders(200, responseBytes.length);
