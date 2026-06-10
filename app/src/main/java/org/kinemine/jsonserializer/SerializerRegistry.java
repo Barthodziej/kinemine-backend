@@ -15,7 +15,7 @@ public class SerializerRegistry {
     public static <T> JsonSerializer<T> getSerializer(Class<T> type) {
         JsonSerializer<?> serializer = registry.get(type);
         if (serializer == null) {
-            throw new IllegalArgumentException("No strategy registered for type: " + type.getName());
+            throw new IllegalArgumentException("No serializer registered for type: " + type.getName());
         }
         return (JsonSerializer<T>) serializer;
     }
