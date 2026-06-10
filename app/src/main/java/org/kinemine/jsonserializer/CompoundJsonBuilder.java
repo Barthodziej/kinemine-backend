@@ -22,8 +22,9 @@ public class CompoundJsonBuilder {
     }
 
     public CompoundJsonBuilder addKeyValue(String key, String value) {
+        JsonSerializer<String> stringSerializer = SerializerRegistry.getSerializer(String.class);
         stringBuilder
-            .append(key)
+            .append(stringSerializer.serialize(key))
             .append(':')
             .append(value)
             .append(',');
