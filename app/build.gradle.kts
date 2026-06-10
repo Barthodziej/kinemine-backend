@@ -29,3 +29,8 @@ application {
     // Define the main class for the application.
     mainClass = "org.kinemine.App"
 }
+
+
+tasks.withType<JavaExec> {
+    environment("REPOSITORY_LOCATION", "/home/Bartodziej/Projekty/kinemine-repository")
+}

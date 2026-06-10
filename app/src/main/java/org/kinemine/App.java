@@ -9,15 +9,12 @@ import org.kinemine.repository.MovieRepository;
 
 import org.kinemine.jsonserializer.SerializerRegistry;
 import org.kinemine.jsonserializer.impl.StringSerializer;
-import org.kinemine.model.Movie;
 import org.kinemine.jsonserializer.impl.BufferedImageSerializer;
 import org.kinemine.jsonserializer.impl.MovieSerializer;
 
-import java.awt.image.BufferedImage;
 import java.net.InetSocketAddress;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.regex.Matcher;
 
 import com.sun.net.httpserver.HttpServer;
 
@@ -35,9 +32,7 @@ public class App {
     public static void main(String[] args) throws Exception {
         initializeRegistry();
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
-        String unixPath = "~/Projekty/kinemine-repository/";
-        String expanded = unixPath.replaceFirst("^~", Matcher.quoteReplacement(System.getProperty("user.home")));
-        Path javaPath = Paths.get(expanded);
+        Path javaPath = Paths.get(System.getenv("REPOSITORY_LOCATION"));
         System.out.println(javaPath.toAbsolutePath());
 
         MovieRepository repo = new MovieRepository(javaPath);
