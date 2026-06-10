@@ -21,6 +21,7 @@ public class StringSerializer implements JsonSerializer<String> {
 
     @Override
     public String serialize(String string) {
+        if (string == null) return "null";
         StringBuilder sb = new StringBuilder();
         sb.append('"');
         string.chars()

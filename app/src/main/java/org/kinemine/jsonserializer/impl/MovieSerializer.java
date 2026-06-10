@@ -10,6 +10,7 @@ public class MovieSerializer implements JsonSerializer<Movie> {
 
     @Override
     public String serialize(Movie movie) {
+        if (movie == null) return "null";
         JsonSerializer<String> stringSerializer
             = SerializerRegistry.getSerializer(String.class); 
         return new CompoundJsonBuilder()

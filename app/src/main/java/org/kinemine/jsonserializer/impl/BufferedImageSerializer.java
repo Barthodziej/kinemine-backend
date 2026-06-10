@@ -12,6 +12,7 @@ public class BufferedImageSerializer implements JsonSerializer<BufferedImage> {
 
     @Override
     public String serialize(BufferedImage image) {
+        if (image == null) return "null";
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try {
             ImageIO.write(image, "png", bos); 

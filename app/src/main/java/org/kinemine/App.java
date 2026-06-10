@@ -11,6 +11,7 @@ import org.kinemine.jsonserializer.SerializerRegistry;
 import org.kinemine.jsonserializer.impl.StringSerializer;
 import org.kinemine.jsonserializer.impl.BufferedImageSerializer;
 import org.kinemine.jsonserializer.impl.MovieSerializer;
+import org.kinemine.jsonserializer.impl.ListSerializer;
 
 import java.net.InetSocketAddress;
 import java.nio.file.Path;
@@ -27,6 +28,7 @@ public class App {
         SerializerRegistry.register(new StringSerializer());
         SerializerRegistry.register(new BufferedImageSerializer());
         SerializerRegistry.register(new MovieSerializer());
+        SerializerRegistry.register(new ListSerializer());
     }
 
     public static void main(String[] args) throws Exception {
