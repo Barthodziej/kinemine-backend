@@ -10,8 +10,7 @@ public class CompoundJsonBuilder {
     }
 
     public CompoundJsonBuilder reset() {
-        stringBuilder.setLength(0);
-        stringBuilder.append('{');
+        stringBuilder.setLength(1);
         return this;
     }
 
