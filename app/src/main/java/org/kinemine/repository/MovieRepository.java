@@ -11,8 +11,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-import javax.imageio.ImageIO;
-
 public class MovieRepository {
 
     Path repositoryPath;
@@ -33,23 +31,25 @@ public class MovieRepository {
         Path titlePath = moviePath.resolve("title.txt");
         Path imageUrlPath = moviePath.resolve("image-url.txt");
         Path watchedPath = moviePath.resolve("watched.txt");
-        String title;
-        String imageUrl;
-        boolean watched;
+        Path tagsPath = moviePath.resolve("tags.txt");
+        MovieBuilder movieBuilder = new MovieBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(titlePath.toString()))) {
-            title = br.readLine();
+            String title = br.readLine();
+            movieBuilder.withTitle(title);
         }
         try (BufferedReader br = new BufferedReader(new FileReader(imageUrlPath.toString()))) {
-            imageUrl = br.readLine();
+            String imageUrl = br.readLine();
+            movieBuilder.withImageUrl(imageUrl);
         }
         try (BufferedReader br = new BufferedReader(new FileReader(watchedPath.toString()))) {
-            watched = br.readLine().equals("true") ? true : false;
+            boolean watched = br.readLine().equals("true") ? true : false;
+            movieBuilder.withWatched(watched);
         }
-        return new MovieBuilder()
-            .withTitle(title)
-            .withImageUrl(imageUrl)
-            .withWatched(watched)
-            .getProduct();
+        try (BufferedReader br = new BufferedReader(new FileReader(tagsPath.toString()))) {
+            br.lines()
+                .forEach(movieBuilder::withTag);
+        }
+        return movieBuilder.getProduct();
     }
 
     public List<Movie> getAllMovies() throws IOException {

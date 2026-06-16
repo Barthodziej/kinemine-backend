@@ -7,7 +7,9 @@ import org.kinemine.handler.HelloHandler;
 import org.kinemine.handler.UnwatchedMoviesHandler;
 import org.kinemine.handler.WatchedMoviesHandler;
 import org.kinemine.handler.AllMoviesHandler;
+import org.kinemine.handler.TagsHandler;
 import org.kinemine.repository.MovieRepository;
+import org.kinemine.repository.TagRepository;
 
 import java.net.InetSocketAddress;
 import java.nio.file.Path;
@@ -24,15 +26,16 @@ public class App {
     public static void main(String[] args) throws Exception {
         AppConfig.initializeRegistry();
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
-        Path javaPath = Paths.get(System.getenv("REPOSITORY_LOCATION"));
-        System.out.println(javaPath.toAbsolutePath());
+        Path repositoryPath = Paths.get(System.getenv("REPOSITORY_LOCATION"));
 
-        MovieRepository repo = new MovieRepository(javaPath);
+        MovieRepository movieRepo = new MovieRepository(repositoryPath.resolve("movies"));
+        TagRepository tagRepo     = new TagRepository(repositoryPath.resolve("tags"));
 
-        server.createContext("/movies/all", new AllMoviesHandler(repo));
-        server.createContext("/movies/watched", new WatchedMoviesHandler(repo));
-        server.createContext("/movies/unwatched", new UnwatchedMoviesHandler(repo));
-        server.createContext("/hello", new HelloHandler());
+        server.createContext("/movies/all", new AllMoviesHandler(movieRepo));
+        server.createContext("/movies/watched", new WatchedMoviesHandler(movieRepo));
+        server.createContext("/movies/unwatched", new UnwatchedMoviesHandler(movieRepo));
+        server.createContext("/tags", new TagsHandler(tagRepo));
+        server.createContext("/", new HelloHandler());
         server.setExecutor(null);
         server.start();
         System.out.println("Server is listening on port 8080...");

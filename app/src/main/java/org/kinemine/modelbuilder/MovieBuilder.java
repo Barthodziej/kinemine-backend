@@ -33,5 +33,10 @@ public class MovieBuilder {
         movie.watched = watched;
         return this;
     }
+
+    public MovieBuilder withTag(String tag) {
+        movie.tags.add(tag);
+        return this;
+    }
  
 }
