@@ -32,5 +32,5 @@ application {
 
 
 tasks.withType<JavaExec> {
-    environment("REPOSITORY_LOCATION", "/home/Bartodziej/Projekty/kinemine-repository")
+    environment("REPOSITORY_LOCATION", "/home/Bartodziej/Projekty/kinemine-repository/")
 }
